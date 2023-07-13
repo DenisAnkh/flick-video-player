@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -16,6 +16,7 @@ class FlickVideoWithControls extends StatefulWidget {
     Key? key,
     this.controls,
     this.videoFit = BoxFit.cover,
+    this.videoPlayerBuilder,
     this.playerLoadingFallback = const Center(
       child: CircularProgressIndicator(),
     ),
@@ -84,6 +85,10 @@ class FlickVideoWithControls extends StatefulWidget {
   /// If false videoPlayerController will not be updated.
   final bool willVideoPlayerControllerChange;
 
+  /// The builder must return [VideoPlayer] instance or wrapped with a container [VideoPlayer] instance.
+  /// The builder may be usefull to apply some transformation to VideoPlayer (e.g., flipping or ratating).
+  final VideoPlayerWidgetBuilder? videoPlayerBuilder;
+
   get videoPlayerController => null;
 
   @override
@@ -124,6 +129,7 @@ class _FlickVideoWithControlsState extends State<FlickVideoWithControls> {
                     videoPlayerController: _videoPlayerController,
                     fit: widget.videoFit,
                     aspectRatioWhenLoading: widget.aspectRatioWhenLoading,
+                    videoPlayerBuilder: widget.videoPlayerBuilder,
                   ),
                 ),
                 Positioned.fill(
