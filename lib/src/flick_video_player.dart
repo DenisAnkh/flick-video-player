@@ -1,9 +1,9 @@
-import 'package:flick_video_player/src/utils/web_key_bindings.dart';
-import 'package:universal_html/html.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flick_video_player/src/utils/web_key_bindings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:universal_html/html.dart';
 import 'package:wakelock/wakelock.dart';
 
 class FlickVideoPlayer extends StatefulWidget {
@@ -27,6 +27,10 @@ class FlickVideoPlayer extends StatefulWidget {
     this.wakelockEnabled = true,
     this.wakelockEnabledFullscreen = true,
     this.webKeyDownHandler = flickDefaultWebKeyDownHandler,
+
+    ///
+    this.allowPlaybackSpeedChanging = true,
+    this.playbackSpeeds = const [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
   }) : super(key: key);
 
   final FlickManager flickManager;
@@ -63,6 +67,12 @@ class FlickVideoPlayer extends StatefulWidget {
 
   /// Callback called on keyDown for web, used for keyboard shortcuts.
   final Function(KeyboardEvent, FlickManager) webKeyDownHandler;
+
+  /// Defines if the playback speed changing is allowed
+  final bool allowPlaybackSpeedChanging;
+
+  /// Defines the set of allowed playback speeds user can change
+  final List<double> playbackSpeeds;
 
   @override
   _FlickVideoPlayerState createState() => _FlickVideoPlayerState();
@@ -138,7 +148,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
       );
     });
 
-    Overlay.of(context)!.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   _exitFullscreen() {
