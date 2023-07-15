@@ -18,7 +18,7 @@ GetPlayerControlsTimeout getPlayerControlsTimeoutDefault = ({
   if (errorInVideo! || !isVideoInitialized! || !isPlaying! || isVideoEnded!) {
     duration = Duration(days: 365);
   } else {
-    duration = Duration(seconds: 3);
+    duration = Duration(seconds: 5);
   }
 
   return duration;
