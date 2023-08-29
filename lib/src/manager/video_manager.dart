@@ -205,8 +205,8 @@ class FlickVideoManager extends ChangeNotifier {
   @override
   void dispose() {
     _mounted = false;
-    _videoPlayerController?.pause();
     _videoPlayerController?.removeListener(_videoListener);
+    _videoPlayerController?.pause();
     _videoPlayerController?.dispose();
 
     super.dispose();

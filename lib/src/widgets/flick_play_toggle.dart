@@ -10,6 +10,7 @@ class FlickPlayToggle extends StatelessWidget {
     this.pauseChild,
     this.replayChild,
     this.togglePlay,
+    this.justRender = false,
     this.color,
     this.size,
     this.padding,
@@ -53,6 +54,9 @@ class FlickPlayToggle extends StatelessWidget {
   /// Decoration around the visible child.
   final Decoration? decoration;
 
+  /// If true then the widget just render self and won't supply any action (no GuestureDetector will be used).
+  final bool justRender;
+
   @override
   Widget build(BuildContext context) {
     FlickControlManager controlManager =
@@ -84,6 +88,16 @@ class FlickPlayToggle extends StatelessWidget {
             ? pauseWidget
             : playWidget;
 
+    Widget widget = Container(
+      padding: padding,
+      decoration: decoration,
+      child: child,
+    );
+
+    if (justRender) {
+      return widget;
+    }
+
     return GestureDetector(
         key: key,
         onTap: () {
@@ -95,10 +109,6 @@ class FlickPlayToggle extends StatelessWidget {
                 : controlManager.togglePlay();
           }
         },
-        child: Container(
-          padding: padding,
-          decoration: decoration,
-          child: child,
-        ));
+        child: widget);
   }
 }

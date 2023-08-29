@@ -17,6 +17,8 @@ class FlickVideoWithControls extends StatefulWidget {
     this.controls,
     this.videoFit = BoxFit.cover,
     this.videoPlayerBuilder,
+    this.videoPlayerWrapperBuilder,
+    this.poster,
     this.playerLoadingFallback = const Center(
       child: CircularProgressIndicator(),
     ),
@@ -45,6 +47,9 @@ class FlickVideoWithControls extends StatefulWidget {
 
   /// Create custom controls or use any of these [FlickPortraitControls], [FlickLandscapeControls]
   final Widget? controls;
+
+  /// Widget (e.g. Image) that will be used as poster during video loading
+  final Widget? poster;
 
   /// Conditionally rendered if player is not initialized.
   final Widget playerLoadingFallback;
@@ -87,7 +92,11 @@ class FlickVideoWithControls extends StatefulWidget {
 
   /// The builder must return [VideoPlayer] instance or wrapped with a container [VideoPlayer] instance.
   /// The builder may be usefull to apply some transformation to VideoPlayer (e.g., flipping or ratating).
-  final VideoPlayerWidgetBuilder? videoPlayerBuilder;
+  final VideoPlayerBuilder? videoPlayerBuilder;
+
+  /// The builder must return [VideoPlayer] instance or wrapped with a container [VideoPlayer] instance.
+  /// The builder may be usefull to apply some transformation to VideoPlayer (e.g., flipping or ratating).
+  final VideoPlayerWrapperBuilder? videoPlayerWrapperBuilder;
 
   get videoPlayerController => null;
 
@@ -130,6 +139,8 @@ class _FlickVideoWithControlsState extends State<FlickVideoWithControls> {
                     fit: widget.videoFit,
                     aspectRatioWhenLoading: widget.aspectRatioWhenLoading,
                     videoPlayerBuilder: widget.videoPlayerBuilder,
+                    videoPlayerWrapperBuilder: widget.videoPlayerWrapperBuilder,
+                    poster: widget.poster,
                   ),
                 ),
                 Positioned.fill(
