@@ -46,72 +46,70 @@ class FlickNativeVideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? videoHeight = videoPlayerController?.value.size.height;
-    double? videoWidth = videoPlayerController?.value.size.width;
+    // double? videoHeight = videoPlayerController?.value.size.height;
+    // double? videoWidth = videoPlayerController?.value.size.width;
 
     return LayoutBuilder(
       builder: (context, size) {
-        double aspectRatio = (size.maxHeight == double.infinity ||
-                size.maxWidth == double.infinity)
-            ? (videoPlayerController?.value.isInitialized == true
+        double? videoAspectRatio =
+            videoPlayerController?.value.isInitialized == true
                 ? videoPlayerController?.value.aspectRatio
-                : aspectRatioWhenLoading!)!
-            : size.maxWidth / size.maxHeight;
+                : aspectRatioWhenLoading;
 
-        bool videoInitialized =
-            videoPlayerController?.value.isInitialized == true;
+        double viewportAspectRatio = size.maxWidth / size.maxHeight;
+
+        double resultAspectRatio = videoAspectRatio == null
+            ? viewportAspectRatio
+            : videoAspectRatio / viewportAspectRatio;
+
+        bool isInitialized = videoPlayerController?.value.isInitialized == true;
+        bool isStarted = isInitialized &&
+            videoPlayerController!.value.position.inMicroseconds > 0;
 
         late Widget videoPlayer;
 
-        if (poster != null) {
-          if (videoInitialized) {
-            videoPlayer = Container(
-              height: videoHeight,
-              width: videoWidth,
-              child: Stack(
-                children: [
-                  Positioned.fill(child: poster!),
-                  VideoPlayer(videoPlayerController!),
-                ],
-              ),
-            );
-          } else {
-            videoPlayer = Container(
-              height: size.maxHeight,
-              width: size.maxWidth,
-              child: Stack(
-                children: [
-                  Positioned.fill(child: poster!),
-                ],
-              ),
-            );
-          }
+        if (isInitialized && isStarted) {
+          videoPlayer = Container(
+            // height: videoHeight,
+            // width: videoWidth,
+            height: size.maxHeight,
+            width: size.maxWidth,
+            child: VideoPlayer(videoPlayerController!),
+          );
         } else {
-          if (videoInitialized) {
-            videoPlayer = Container(
-              height: videoHeight,
-              width: videoWidth,
-              child: VideoPlayer(videoPlayerController!),
-            );
-          } else {
-            videoPlayer = Container(
-              height: size.maxHeight,
-              width: size.maxWidth,
-            );
-          }
+          videoPlayer = Container(
+            height: size.maxHeight,
+            width: size.maxWidth,
+          );
         }
 
         if (videoPlayerBuilder != null) {
           videoPlayer = videoPlayerBuilder!(videoPlayer, videoPlayerController);
         }
 
-        final preparedVideoPlayer = AspectRatio(
-          aspectRatio: aspectRatio,
+        Widget preparedVideoPlayer = SizedBox(
+          height: size.maxHeight,
+          width: size.maxWidth,
           child: FittedBox(
-            fit: fit!,
-            child: videoPlayer,
-          ),
+              fit: fit!,
+              child: SizedBox(
+                  height: size.maxHeight,
+                  width: size.maxWidth * resultAspectRatio,
+                  child: videoPlayer)),
         );
+
+        if (poster != null) {
+          preparedVideoPlayer = Container(
+            height: size.maxHeight,
+            width: size.maxWidth,
+            child: Stack(
+              children: [
+                Positioned.fill(child: poster!),
+                preparedVideoPlayer,
+              ],
+            ),
+          );
+        }
 
         if (videoPlayerWrapperBuilder == null) {
           return preparedVideoPlayer;
