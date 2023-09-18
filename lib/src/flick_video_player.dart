@@ -80,7 +80,7 @@ class FlickVideoPlayer extends StatefulWidget {
 
 class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
   late FlickManager flickManager;
-  // bool _isFullscreen = false;
+  bool _isFullscreen = false;
   OverlayEntry? _overlayEntry;
 
   // bool get _isFullscreen => flickManager.flickControlManager!.isFullscreen;
@@ -118,9 +118,10 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
   // Listener on [FlickControlManager],
   // Pushes the full-screen if [FlickControlManager] is changed to full-screen.
   void listener() async {
-    if (flickManager.flickControlManager!.isFullscreen) {
+    if (flickManager.flickControlManager!.isFullscreen && !_isFullscreen) {
       _switchToFullscreen();
-    } else if (!flickManager.flickControlManager!.isFullscreen) {
+    } else if (_isFullscreen &&
+        !flickManager.flickControlManager!.isFullscreen) {
       _exitFullscreen();
     }
   }
@@ -132,7 +133,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
       Wakelock.enable();
     }
 
-    // _isFullscreen = true;
+    _isFullscreen = true;
     _setPreferredOrientation();
     _setSystemUIOverlays();
     if (kIsWeb) {
@@ -159,7 +160,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
       Wakelock.enable();
     }
 
-    // _isFullscreen = false;
+    _isFullscreen = false;
 
     if (kIsWeb) {
       document.exitFullscreen();
@@ -175,7 +176,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
     // when aspect ratio is less than 1 , video will be played in portrait mode and orientation will not be changed.
     var aspectRatio =
         widget.flickManager.flickVideoManager!.videoPlayerValue!.aspectRatio;
-    if (flickManager.flickControlManager!.isFullscreen && aspectRatio >= 1) {
+    if (_isFullscreen && aspectRatio >= 1) {
       SystemChrome.setPreferredOrientations(
           widget.preferredDeviceOrientationFullscreen);
     } else {
@@ -184,7 +185,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
   }
 
   _setSystemUIOverlays() {
-    if (flickManager.flickControlManager!.isFullscreen) {
+    if (_isFullscreen) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
           overlays: widget.systemUIOverlayFullscreen);
     } else {
