@@ -80,7 +80,7 @@ class FlickVideoPlayer extends StatefulWidget {
 
 class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
   late FlickManager flickManager;
-  bool _isFullscreen = false;
+  late bool _isFullscreen;
   OverlayEntry? _overlayEntry;
 
   // bool get _isFullscreen => flickManager.flickControlManager!.isFullscreen;
@@ -90,6 +90,8 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
     flickManager = widget.flickManager;
     flickManager.registerContext(context);
     flickManager.flickControlManager!.addListener(listener);
+
+    _isFullscreen = flickManager.flickControlManager!.isFullscreen;
     _setSystemUIOverlays();
     _setPreferredOrientation();
 
@@ -219,7 +221,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
         return Future.value(true);
       },
       child: OrientationBuilder(builder: (context, orientation) {
-        // _setPreferredOrientation();
+        _setPreferredOrientation();
         return FlickManagerBuilder(
           flickManager: flickManager,
           child: widget.flickVideoWithControls,
