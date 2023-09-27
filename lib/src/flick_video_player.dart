@@ -221,7 +221,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
         return Future.value(true);
       },
       child: OrientationBuilder(builder: (context, orientation) {
-        _setPreferredOrientation();
+        // _setPreferredOrientation();
         return FlickManagerBuilder(
           flickManager: flickManager,
           child: widget.flickVideoWithControls,

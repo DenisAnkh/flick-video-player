@@ -126,54 +126,52 @@ class _FlickVideoWithControlsState extends State<FlickVideoWithControls> {
     bool _showVideoCaption = controlManager.isSub;
     return IconTheme(
       data: widget.iconThemeData,
-      child: LayoutBuilder(builder: (context, size) {
-        return Container(
-          color: widget.backgroundColor,
-          child: DefaultTextStyle(
-            style: widget.textStyle,
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: FlickNativeVideoPlayer(
-                    videoPlayerController: _videoPlayerController,
-                    fit: widget.videoFit,
-                    aspectRatioWhenLoading: widget.aspectRatioWhenLoading,
-                    videoPlayerBuilder: widget.videoPlayerBuilder,
-                    videoPlayerWrapperBuilder: widget.videoPlayerWrapperBuilder,
-                    poster: widget.poster,
-                  ),
+      child: Container(
+        color: widget.backgroundColor,
+        child: DefaultTextStyle(
+          style: widget.textStyle,
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: FlickNativeVideoPlayer(
+                  videoPlayerController: _videoPlayerController,
+                  fit: widget.videoFit,
+                  aspectRatioWhenLoading: widget.aspectRatioWhenLoading,
+                  videoPlayerBuilder: widget.videoPlayerBuilder,
+                  videoPlayerWrapperBuilder: widget.videoPlayerWrapperBuilder,
+                  poster: widget.poster,
                 ),
-                Positioned.fill(
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      _videoPlayerController!.closedCaptionFile != null &&
-                              _showVideoCaption
-                          ? Positioned(
-                              bottom: 5,
-                              child: Transform.scale(
-                                scale: 0.7,
-                                child: ClosedCaption(
-                                    textStyle: widget.closedCaptionTextStyle,
-                                    text: _videoPlayerController!
-                                        .value.caption.text),
-                              ),
-                            )
-                          : SizedBox(),
-                      if (_videoPlayerController?.value.hasError == false &&
-                          _videoPlayerController?.value.isInitialized == false)
-                        widget.playerLoadingFallback,
-                      if (_videoPlayerController?.value.hasError == true)
-                        widget.playerErrorFallback,
-                      widget.controls ?? Container(),
-                    ],
-                  ),
+              ),
+              Positioned.fill(
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    _videoPlayerController!.closedCaptionFile != null &&
+                            _showVideoCaption
+                        ? Positioned(
+                            bottom: 5,
+                            child: Transform.scale(
+                              scale: 0.7,
+                              child: ClosedCaption(
+                                  textStyle: widget.closedCaptionTextStyle,
+                                  text: _videoPlayerController!
+                                      .value.caption.text),
+                            ),
+                          )
+                        : SizedBox(),
+                    if (_videoPlayerController?.value.hasError == false &&
+                        _videoPlayerController?.value.isInitialized == false)
+                      widget.playerLoadingFallback,
+                    if (_videoPlayerController?.value.hasError == true)
+                      widget.playerErrorFallback,
+                    widget.controls ?? Container(),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }

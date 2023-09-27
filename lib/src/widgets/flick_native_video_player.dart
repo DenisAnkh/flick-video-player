@@ -49,79 +49,80 @@ class FlickNativeVideoPlayer extends StatelessWidget {
     // double? videoHeight = videoPlayerController?.value.size.height;
     // double? videoWidth = videoPlayerController?.value.size.width;
 
-    return ValueListenableBuilder<VideoPlayerValue>(
-        valueListenable: videoPlayerController!,
-        builder: (context, videoPlayerValue, child) {
-          return LayoutBuilder(
-            builder: (context, size) {
-              double? videoAspectRatio = videoPlayerValue.isInitialized == true
-                  ? videoPlayerValue.aspectRatio
-                  : aspectRatioWhenLoading;
+    return LayoutBuilder(
+      key: ValueKey(hashCode),
+      builder: (context, size) {
+        bool isInitialized = videoPlayerController?.value.isInitialized == true;
 
-              double viewportAspectRatio = size.maxWidth / size.maxHeight;
+        double? videoAspectRatio = isInitialized
+            ? videoPlayerController?.value.aspectRatio
+            : aspectRatioWhenLoading;
 
-              double resultAspectRatio = videoAspectRatio == null
-                  ? viewportAspectRatio
-                  : videoAspectRatio / viewportAspectRatio;
+        double viewportAspectRatio = size.maxWidth / size.maxHeight;
 
-              bool isInitialized = videoPlayerValue.isInitialized == true;
-              bool isStarted =
-                  isInitialized && videoPlayerValue.position.inMicroseconds > 0;
+        double resultAspectRatio = videoAspectRatio == null
+            ? viewportAspectRatio
+            : videoAspectRatio / viewportAspectRatio;
 
-              late Widget videoPlayer;
+        bool isStarted = isInitialized &&
+            videoPlayerController!.value.position.inMicroseconds > 0;
 
-              if (isInitialized && isStarted) {
-                videoPlayer = Container(
-                  // height: videoHeight,
-                  // width: videoWidth,
-                  height: size.maxHeight,
-                  width: size.maxWidth,
-                  child: VideoPlayer(videoPlayerController!),
-                );
-              } else {
-                videoPlayer = Container(
-                  height: size.maxHeight,
-                  width: size.maxWidth,
-                );
-              }
+        late Widget videoPlayer;
 
-              if (videoPlayerBuilder != null) {
-                videoPlayer =
-                    videoPlayerBuilder!(videoPlayer, videoPlayerController);
-              }
-
-              Widget preparedVideoPlayer = SizedBox(
-                height: size.maxHeight,
-                width: size.maxWidth,
-                child: FittedBox(
-                    fit: fit!,
-                    child: SizedBox(
-                        height: size.maxHeight,
-                        width: size.maxWidth * resultAspectRatio,
-                        child: videoPlayer)),
-              );
-
-              if (poster != null) {
-                preparedVideoPlayer = Container(
-                  height: size.maxHeight,
-                  width: size.maxWidth,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(child: poster!),
-                      preparedVideoPlayer,
-                    ],
-                  ),
-                );
-              }
-
-              if (videoPlayerWrapperBuilder == null) {
-                return preparedVideoPlayer;
-              } else {
-                return videoPlayerWrapperBuilder!(
-                    preparedVideoPlayer, videoPlayerController);
-              }
-            },
+        if (isInitialized && isStarted) {
+          // debugPrint(
+          //     'VVVV222: ${videoPlayerController?.value.isInitialized}, ${videoPlayerController!.value.position.inMicroseconds}');
+          videoPlayer = Container(
+            // height: videoHeight,
+            // width: videoWidth,
+            height: size.maxHeight,
+            width: size.maxWidth,
+            child: VideoPlayer(videoPlayerController!),
           );
-        });
+        } else {
+          // debugPrint(
+          //     'VVVV111: ${videoPlayerController?.value.isInitialized}, ${videoPlayerController!.value.position.inMicroseconds}');
+          videoPlayer = Container(
+            height: size.maxHeight,
+            width: size.maxWidth,
+          );
+        }
+
+        if (videoPlayerBuilder != null) {
+          videoPlayer = videoPlayerBuilder!(videoPlayer, videoPlayerController);
+        }
+
+        Widget preparedVideoPlayer = SizedBox(
+          height: size.maxHeight,
+          width: size.maxWidth,
+          child: FittedBox(
+              fit: fit!,
+              child: SizedBox(
+                  height: size.maxHeight,
+                  width: size.maxWidth * resultAspectRatio,
+                  child: videoPlayer)),
+        );
+
+        if (poster != null) {
+          preparedVideoPlayer = Container(
+            height: size.maxHeight,
+            width: size.maxWidth,
+            child: Stack(
+              children: [
+                Positioned.fill(child: poster!),
+                preparedVideoPlayer,
+              ],
+            ),
+          );
+        }
+
+        if (videoPlayerWrapperBuilder == null) {
+          return preparedVideoPlayer;
+        } else {
+          return videoPlayerWrapperBuilder!(
+              preparedVideoPlayer, videoPlayerController);
+        }
+      },
+    );
   }
 }
