@@ -49,75 +49,79 @@ class FlickNativeVideoPlayer extends StatelessWidget {
     // double? videoHeight = videoPlayerController?.value.size.height;
     // double? videoWidth = videoPlayerController?.value.size.width;
 
-    return LayoutBuilder(
-      builder: (context, size) {
-        double? videoAspectRatio =
-            videoPlayerController?.value.isInitialized == true
-                ? videoPlayerController?.value.aspectRatio
-                : aspectRatioWhenLoading;
+    return ValueListenableBuilder<VideoPlayerValue>(
+        valueListenable: videoPlayerController!,
+        builder: (context, videoPlayerValue, child) {
+          return LayoutBuilder(
+            builder: (context, size) {
+              double? videoAspectRatio = videoPlayerValue.isInitialized == true
+                  ? videoPlayerValue.aspectRatio
+                  : aspectRatioWhenLoading;
 
-        double viewportAspectRatio = size.maxWidth / size.maxHeight;
+              double viewportAspectRatio = size.maxWidth / size.maxHeight;
 
-        double resultAspectRatio = videoAspectRatio == null
-            ? viewportAspectRatio
-            : videoAspectRatio / viewportAspectRatio;
+              double resultAspectRatio = videoAspectRatio == null
+                  ? viewportAspectRatio
+                  : videoAspectRatio / viewportAspectRatio;
 
-        bool isInitialized = videoPlayerController?.value.isInitialized == true;
-        bool isStarted = isInitialized &&
-            videoPlayerController!.value.position.inMicroseconds > 0;
+              bool isInitialized = videoPlayerValue.isInitialized == true;
+              bool isStarted =
+                  isInitialized && videoPlayerValue.position.inMicroseconds > 0;
 
-        late Widget videoPlayer;
+              late Widget videoPlayer;
 
-        if (isInitialized && isStarted) {
-          videoPlayer = Container(
-            // height: videoHeight,
-            // width: videoWidth,
-            height: size.maxHeight,
-            width: size.maxWidth,
-            child: VideoPlayer(videoPlayerController!),
-          );
-        } else {
-          videoPlayer = Container(
-            height: size.maxHeight,
-            width: size.maxWidth,
-          );
-        }
-
-        if (videoPlayerBuilder != null) {
-          videoPlayer = videoPlayerBuilder!(videoPlayer, videoPlayerController);
-        }
-
-        Widget preparedVideoPlayer = SizedBox(
-          height: size.maxHeight,
-          width: size.maxWidth,
-          child: FittedBox(
-              fit: fit!,
-              child: SizedBox(
+              if (isInitialized && isStarted) {
+                videoPlayer = Container(
+                  // height: videoHeight,
+                  // width: videoWidth,
                   height: size.maxHeight,
-                  width: size.maxWidth * resultAspectRatio,
-                  child: videoPlayer)),
-        );
+                  width: size.maxWidth,
+                  child: VideoPlayer(videoPlayerController!),
+                );
+              } else {
+                videoPlayer = Container(
+                  height: size.maxHeight,
+                  width: size.maxWidth,
+                );
+              }
 
-        if (poster != null) {
-          preparedVideoPlayer = Container(
-            height: size.maxHeight,
-            width: size.maxWidth,
-            child: Stack(
-              children: [
-                Positioned.fill(child: poster!),
-                preparedVideoPlayer,
-              ],
-            ),
+              if (videoPlayerBuilder != null) {
+                videoPlayer =
+                    videoPlayerBuilder!(videoPlayer, videoPlayerController);
+              }
+
+              Widget preparedVideoPlayer = SizedBox(
+                height: size.maxHeight,
+                width: size.maxWidth,
+                child: FittedBox(
+                    fit: fit!,
+                    child: SizedBox(
+                        height: size.maxHeight,
+                        width: size.maxWidth * resultAspectRatio,
+                        child: videoPlayer)),
+              );
+
+              if (poster != null) {
+                preparedVideoPlayer = Container(
+                  height: size.maxHeight,
+                  width: size.maxWidth,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: poster!),
+                      preparedVideoPlayer,
+                    ],
+                  ),
+                );
+              }
+
+              if (videoPlayerWrapperBuilder == null) {
+                return preparedVideoPlayer;
+              } else {
+                return videoPlayerWrapperBuilder!(
+                    preparedVideoPlayer, videoPlayerController);
+              }
+            },
           );
-        }
-
-        if (videoPlayerWrapperBuilder == null) {
-          return preparedVideoPlayer;
-        } else {
-          return videoPlayerWrapperBuilder!(
-              preparedVideoPlayer, videoPlayerController);
-        }
-      },
-    );
+        });
   }
 }
