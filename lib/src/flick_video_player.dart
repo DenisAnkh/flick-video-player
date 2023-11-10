@@ -29,6 +29,7 @@ class FlickVideoPlayer extends StatefulWidget {
     this.webKeyDownHandler = flickDefaultWebKeyDownHandler,
 
     ///
+    this.useRootOverlay = false,
     this.allowPlaybackSpeedChanging = true,
     this.playbackSpeeds = const [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
   }) : super(key: key);
@@ -68,6 +69,9 @@ class FlickVideoPlayer extends StatefulWidget {
   /// Callback called on keyDown for web, used for keyboard shortcuts.
   final Function(KeyboardEvent, FlickManager) webKeyDownHandler;
 
+  /// Open video to fullscreen in nested route screen
+  final bool useRootOverlay;
+
   /// Defines if the playback speed changing is allowed
   final bool allowPlaybackSpeedChanging;
 
@@ -83,6 +87,8 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
   late bool _isFullscreen;
   OverlayEntry? _overlayEntry;
 
+  late bool _useRootOverlay;
+
   // bool get _isFullscreen => flickManager.flickControlManager!.isFullscreen;
 
   @override
@@ -90,6 +96,8 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
     flickManager = widget.flickManager;
     flickManager.registerContext(context);
     flickManager.flickControlManager!.addListener(listener);
+
+    _useRootOverlay = widget.useRootOverlay;
 
     _isFullscreen = flickManager.flickControlManager!.isFullscreen;
     _setSystemUIOverlays();
@@ -152,7 +160,9 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer> {
       );
     });
 
-    Overlay.of(context).insert(_overlayEntry!);
+    // Overlay.of(context).insert(_overlayEntry!);
+    Overlay.of(context, rootOverlay: this._useRootOverlay)
+        .insert(_overlayEntry!);
   }
 
   _exitFullscreen() {
