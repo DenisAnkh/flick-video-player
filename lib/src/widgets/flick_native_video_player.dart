@@ -69,7 +69,7 @@ class FlickNativeVideoPlayer extends StatelessWidget {
 
         late Widget videoPlayer;
 
-        if (isInitialized && isStarted) {
+        if (isStarted) {
           // debugPrint(
           //     'VVVV222: ${videoPlayerController?.value.isInitialized}, ${videoPlayerController!.value.position.inMicroseconds}');
           videoPlayer = Container(
