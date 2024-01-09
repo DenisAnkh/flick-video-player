@@ -25,7 +25,6 @@ export './src/widgets/flick_total_duration.dart';
 export './src/widgets/flick_video_buffer.dart';
 export './src/widgets/flick_video_progress_bar.dart';
 export './src/widgets/helpers/auto_play_timer_progress/auto_play_timer_progress.dart';
-export './src/widgets/helpers/auto_play_timer_progress/auto_play_timer_progress.dart';
 export './src/widgets/helpers/auto_play_timer_progress/auto_play_timer_progress_colors.dart';
 export './src/widgets/helpers/flick_auto_hide_child.dart';
 export './src/widgets/helpers/progress_bar/progress_bar_settings.dart';
