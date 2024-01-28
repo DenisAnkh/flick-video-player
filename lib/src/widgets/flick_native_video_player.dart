@@ -97,6 +97,7 @@ class FlickNativeVideoPlayer extends StatelessWidget {
           width: size.maxWidth,
           child: FittedBox(
               fit: fit!,
+              alignment: Alignment.topCenter,
               child: SizedBox(
                   height: size.maxHeight,
                   width: size.maxWidth * resultAspectRatio,
@@ -110,7 +111,7 @@ class FlickNativeVideoPlayer extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned.fill(child: poster!),
-                preparedVideoPlayer,
+                if (isStarted) preparedVideoPlayer,
               ],
             ),
           );
