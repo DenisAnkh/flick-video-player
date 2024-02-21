@@ -29,12 +29,14 @@ class FlickNativeVideoPlayer extends StatelessWidget {
     this.videoPlayerBuilder,
     this.videoPlayerWrapperBuilder,
     this.poster,
+    this.playerLoadingFallback,
   }) : super(key: key);
 
   final BoxFit? fit;
   final double? aspectRatioWhenLoading;
   final VideoPlayerController? videoPlayerController;
   final Widget? poster;
+  final Widget? playerLoadingFallback;
 
   /// The builder must return [VideoPlayer] instance or [VideoPlayer] wrapped with a container.
   /// The builder may be usefull to apply some transformation to VideoPlayer (e.g., flipping or ratating).
@@ -112,6 +114,8 @@ class FlickNativeVideoPlayer extends StatelessWidget {
               children: [
                 Positioned.fill(child: poster!),
                 if (isStarted) preparedVideoPlayer,
+                // if (!isStarted && playerLoadingFallback != null)
+                //   playerLoadingFallback!,
               ],
             ),
           );

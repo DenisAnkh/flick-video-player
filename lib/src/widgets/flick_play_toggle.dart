@@ -9,6 +9,7 @@ class FlickPlayToggle extends StatelessWidget {
     this.playChild,
     this.pauseChild,
     this.replayChild,
+    this.bufferingChild,
     this.togglePlay,
     this.justRender = false,
     this.color,
@@ -31,6 +32,11 @@ class FlickPlayToggle extends StatelessWidget {
   ///
   /// Default - Icon(Icons.replay)
   final Widget? replayChild;
+
+  /// Widget shown when the video is buffering.
+  ///
+  /// Default - SizedBox()
+  final Widget? bufferingChild;
 
   /// Function called onTap of visible child.
   ///
@@ -82,11 +88,15 @@ class FlickPlayToggle extends StatelessWidget {
           color: color,
         );
 
+    Widget bufferingWidget = bufferingChild ?? const SizedBox();
+
     Widget child = videoManager.isVideoEnded
         ? replayWidget
-        : videoManager.isPlaying
-            ? pauseWidget
-            : playWidget;
+        : videoManager.isBuffering
+            ? bufferingWidget
+            : videoManager.isPlaying
+                ? pauseWidget
+                : playWidget;
 
     Widget widget = Container(
       padding: padding,

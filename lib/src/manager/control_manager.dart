@@ -83,6 +83,12 @@ class FlickControlManager extends ChangeNotifier {
       _videoPlayerController!.setVolume(0);
     }
 
+    if (_videoPlayerController != null &&
+        _videoPlayerController!.value.hasError) {
+      //Clear errorDescription if it not null
+      _videoPlayerController!.value =
+          _videoPlayerController!.value.copyWith(errorDescription: null);
+    }
     await _videoPlayerController!.play();
     _flickManager.flickDisplayManager!.handleShowPlayerControls();
     _notify();
@@ -100,6 +106,12 @@ class FlickControlManager extends ChangeNotifier {
 
   /// Pause the video.
   Future<void> pause() async {
+    if (_videoPlayerController != null &&
+        _videoPlayerController!.value.hasError) {
+      //Clear errorDescription if it not null
+      _videoPlayerController!.value =
+          _videoPlayerController!.value.copyWith(errorDescription: null);
+    }
     await _videoPlayerController?.pause();
     _flickManager.flickDisplayManager!
         .handleShowPlayerControls(showWithTimeout: false);

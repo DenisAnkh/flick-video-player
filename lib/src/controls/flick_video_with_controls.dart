@@ -19,9 +19,7 @@ class FlickVideoWithControls extends StatefulWidget {
     this.videoPlayerBuilder,
     this.videoPlayerWrapperBuilder,
     this.poster,
-    this.playerLoadingFallback = const Center(
-      child: CircularProgressIndicator(),
-    ),
+    this.playerLoadingFallback = const CircularProgressIndicator(),
     this.playerErrorFallback = const Center(
       child: const Icon(
         Icons.error,
@@ -140,6 +138,7 @@ class _FlickVideoWithControlsState extends State<FlickVideoWithControls> {
                   videoPlayerBuilder: widget.videoPlayerBuilder,
                   videoPlayerWrapperBuilder: widget.videoPlayerWrapperBuilder,
                   poster: widget.poster,
+                  // playerLoadingFallback: widget.playerLoadingFallback,
                 ),
               ),
               Positioned.fill(
@@ -158,13 +157,14 @@ class _FlickVideoWithControlsState extends State<FlickVideoWithControls> {
                                       .value.caption.text),
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     if (_videoPlayerController?.value.hasError == false &&
-                        _videoPlayerController?.value.isInitialized == false)
-                      widget.playerLoadingFallback,
+                        (_videoPlayerController?.value.isInitialized == false ||
+                            _videoPlayerController?.value.isBuffering == true))
+                      Center(child: widget.playerLoadingFallback),
                     if (_videoPlayerController?.value.hasError == true)
-                      widget.playerErrorFallback,
-                    widget.controls ?? Container(),
+                      Center(child: widget.playerErrorFallback),
+                    widget.controls ?? const SizedBox(),
                   ],
                 ),
               ),

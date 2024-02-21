@@ -14,7 +14,7 @@ class FlickVideoManager extends ChangeNotifier {
 
   final FlickManager _flickManager;
   bool _currentVideoEnded = false;
-  bool _isBuffering = false;
+  bool _isBuffering = true;
   Timer? _nextVideoAutoPlayTimer;
   TimerCancelCallback? _timerCancelCallback;
   Duration? _nextVideoAutoPlayDuration;
@@ -182,11 +182,14 @@ class FlickVideoManager extends ChangeNotifier {
 
     // Mark video is buffering if video has not ended, has no error,
     // and position is equal to buffered duration.
+    // _isBuffering = !isVideoEnded &&
+    //     !videoPlayerValue!.hasError &&
+    //     videoPlayerController!.value.buffered.isNotEmpty == true &&
+    //     videoPlayerController!.value.position.inSeconds >=
+    //         videoPlayerController!.value.buffered[0].end.inSeconds;
     _isBuffering = !isVideoEnded &&
         !videoPlayerValue!.hasError &&
-        videoPlayerController!.value.buffered.isNotEmpty == true &&
-        videoPlayerController!.value.position.inSeconds >=
-            videoPlayerController!.value.buffered[0].end.inSeconds;
+        videoPlayerController!.value.isBuffering;
 
     _notify();
   }
