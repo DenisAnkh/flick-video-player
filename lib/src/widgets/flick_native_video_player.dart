@@ -108,6 +108,7 @@ class FlickNativeVideoPlayer extends StatelessWidget {
 
         if (poster != null) {
           preparedVideoPlayer = Container(
+            color: Theme.of(context).colorScheme.background,
             height: size.maxHeight,
             width: size.maxWidth,
             child: Stack(
@@ -118,6 +119,13 @@ class FlickNativeVideoPlayer extends StatelessWidget {
                 //   playerLoadingFallback!,
               ],
             ),
+          );
+        } else {
+          preparedVideoPlayer = Container(
+            color: Theme.of(context).colorScheme.background,
+            height: size.maxHeight,
+            width: size.maxWidth,
+            child: preparedVideoPlayer,
           );
         }
 
