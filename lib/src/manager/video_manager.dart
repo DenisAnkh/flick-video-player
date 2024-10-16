@@ -143,6 +143,7 @@ class FlickVideoManager extends ChangeNotifier {
 
     if (autoPlay &&
         _flickManager._context != null &&
+        ModalRoute.of(_flickManager._context!) != null &&
         ModalRoute.of(_flickManager._context!)!.isCurrent) {
       //Chrome's autoplay policies are simple:
       //Muted autoplay is always allowed.

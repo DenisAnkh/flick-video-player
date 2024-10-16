@@ -71,7 +71,8 @@ class FlickNativeVideoPlayer extends StatelessWidget {
 
         late Widget videoPlayer;
 
-        if (isStarted) {
+        // if (isStarted) {
+        if (isInitialized) {
           // debugPrint(
           //     'VVVV222: ${videoPlayerController?.value.isInitialized}, ${videoPlayerController!.value.position.inMicroseconds}');
           videoPlayer = Container(
@@ -108,7 +109,7 @@ class FlickNativeVideoPlayer extends StatelessWidget {
 
         if (poster != null) {
           preparedVideoPlayer = Container(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             height: size.maxHeight,
             width: size.maxWidth,
             child: Stack(
@@ -122,7 +123,7 @@ class FlickNativeVideoPlayer extends StatelessWidget {
           );
         } else {
           preparedVideoPlayer = Container(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             height: size.maxHeight,
             width: size.maxWidth,
             child: preparedVideoPlayer,
